@@ -18,12 +18,13 @@ import (
 	"fmt"
 	"os"
 
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
+var Token string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -61,6 +62,10 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(NewCmdProjects())
+	rootCmd.PersistentFlags().StringVar(&Token, "token", "", "Your authentication token that encodes your CGC credentials.")
+	rootCmd.MarkPersistentFlagRequired("token")
+	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
