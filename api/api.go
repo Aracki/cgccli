@@ -2,10 +2,12 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/aracki/cgccli/info"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
+	"github.com/aracki/cgccli/info"
 	"github.com/spf13/viper"
 )
 
@@ -31,10 +33,14 @@ func GetProjects() (projects []Project, err error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("GET request on %s returns %x instead of 200", info.API_URL_PROJECTS, resp.StatusCode))
+	}
+
 	respBody, err := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(respBody))
 	if err != nil {
 		return nil, err
-
 	}
 
 	var jsonResp ProjectsResponse
@@ -43,5 +49,5 @@ func GetProjects() (projects []Project, err error) {
 		return nil, err
 	}
 
-	return  jsonResp.Items, nil
+	return jsonResp.Items, nil
 }
