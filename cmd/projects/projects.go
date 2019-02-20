@@ -10,6 +10,11 @@ func NewCmdProjects() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "projects",
 		Short: "Cancer Genomics Cloud projects",
+		Long: `Projects are the core building blocks of the CGC Platform. 
+Each project corresponds to a distinct scientific investigation, 
+serving as a container for its data, analysis pipelines, and results. 
+Projects are shared only by designated project members.`,
+
 		RunE: func(cmd *cobra.Command, args []string) error {
 			projects, err := api.GetProjects()
 			if err != nil {

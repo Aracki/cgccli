@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/aracki/cgc/info"
 	"io/ioutil"
 	"net/http"
 
@@ -22,8 +23,8 @@ type Project struct {
 func GetProjects() (projects []Project, err error) {
 
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", "https://cgc-api.sbgenomics.com/v2/projects", nil)
-	req.Header.Set("X-SBG-Auth-Token", viper.GetString("token"))
+	req, _ := http.NewRequest("GET", info.API_URL_PROJECTS, nil)
+	req.Header.Set(info.TOKEN_HEADER, viper.GetString("token"))
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

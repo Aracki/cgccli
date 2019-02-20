@@ -1,4 +1,4 @@
-// Copyright © 2019 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2019 NAME HERE aracki.ivan@gmail.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,21 +26,17 @@ import (
 )
 
 var cfgFile string
-var Token string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "cgc",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Use:   "cgccli",
+	Short: "The CLI tool for the CGC Public API",
+	Long: `CLI tool should support following operations:
+		1. List projects 
+		2. List files in project
+		3. Get file details
+		4. Update file details
+		5. Download file`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -56,7 +52,8 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(version.NewCmdVersion())
 	rootCmd.AddCommand(projects.NewCmdProjects())
-	rootCmd.PersistentFlags().StringVar(&Token, "token", "", "Your authentication token that encodes your CGC credentials.")
+
+	rootCmd.PersistentFlags().String("token", "", "Your authentication token that encodes your CGC credentials.")
 	rootCmd.MarkPersistentFlagRequired("token")
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 
