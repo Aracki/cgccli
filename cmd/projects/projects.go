@@ -1,7 +1,6 @@
 package projects
 
 import (
-	"fmt"
 	"github.com/aracki/cgccli/api"
 	"github.com/spf13/cobra"
 )
@@ -30,18 +29,10 @@ func NewCmdProjectsList() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			output(projects)
+			printProjects(projects)
 			return nil
 		},
 	}
 
 	return cmd
-}
-
-func output(projects []api.Project) {
-
-	for i := 0; i < len(projects); i++ {
-		fmt.Printf("id: %s \n", projects[i].Id)
-		fmt.Printf("name: %s \n\n", projects[i].Name)
-	}
 }
