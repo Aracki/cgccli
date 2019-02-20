@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aracki/cgc/cmd/projects"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -62,7 +63,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(versionCmd)
-	rootCmd.AddCommand(NewCmdProjects())
+	rootCmd.AddCommand(projects.NewCmdProjects())
 	rootCmd.PersistentFlags().StringVar(&Token, "token", "", "Your authentication token that encodes your CGC credentials.")
 	rootCmd.MarkPersistentFlagRequired("token")
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
