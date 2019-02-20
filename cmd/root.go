@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/aracki/cgc/cmd/version"
 	"os"
 
 	"github.com/aracki/cgc/cmd/projects"
@@ -42,15 +43,6 @@ to quickly create a Cobra application.`,
 	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print the version number of cgc cli tool",
-	Long:  `All software has versions.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("v0.1")
-	},
-}
-
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
@@ -62,7 +54,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(version.NewCmdVersion())
 	rootCmd.AddCommand(projects.NewCmdProjects())
 	rootCmd.PersistentFlags().StringVar(&Token, "token", "", "Your authentication token that encodes your CGC credentials.")
 	rootCmd.MarkPersistentFlagRequired("token")
