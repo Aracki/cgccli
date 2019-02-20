@@ -38,7 +38,6 @@ func GetProjects() (projects []Project, err error) {
 	}
 
 	respBody, err := ioutil.ReadAll(resp.Body)
-	fmt.Println(string(respBody))
 	if err != nil {
 		return nil, err
 	}
