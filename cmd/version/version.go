@@ -2,7 +2,7 @@ package version
 
 import (
 	"fmt"
-	"github.com/aracki/cgc/info"
+	"github.com/aracki/cgccli/info"
 	"github.com/spf13/cobra"
 )
 

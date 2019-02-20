@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/aracki/cgc/cmd"
+import "github.com/aracki/cgccli/cmd"
 
 func main() {
 	cmd.Execute()

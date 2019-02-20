@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/aracki/cgc/info"
+	"github.com/aracki/cgccli/info"
 	"io/ioutil"
 	"net/http"
 

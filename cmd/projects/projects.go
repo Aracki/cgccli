@@ -2,7 +2,7 @@ package projects
 
 import (
 	"fmt"
-	"github.com/aracki/cgc/api"
+	"github.com/aracki/cgccli/api"
 	"github.com/spf13/cobra"
 )
 

@@ -16,10 +16,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/aracki/cgc/cmd/version"
 	"os"
 
-	"github.com/aracki/cgc/cmd/projects"
+	"github.com/aracki/cgccli/cmd/projects"
+	"github.com/aracki/cgccli/cmd/version"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
