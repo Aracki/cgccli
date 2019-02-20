@@ -14,7 +14,17 @@ func NewCmdProjects() *cobra.Command {
 Each project corresponds to a distinct scientific investigation, 
 serving as a container for its data, analysis pipelines, and results. 
 Projects are shared only by designated project members.`,
+	}
 
+	cmd.AddCommand(NewCmdProjectsList())
+
+	return cmd
+}
+
+func NewCmdProjectsList() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list",
+		Short: "list all projects",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			projects, err := api.GetProjects()
 			if err != nil {
