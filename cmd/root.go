@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/aracki/cgccli/cmd/files"
 	"os"
 
 	"github.com/aracki/cgccli/cmd/projects"
@@ -52,6 +53,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(version.NewCmdVersion())
 	rootCmd.AddCommand(projects.NewCmdProjects())
+	rootCmd.AddCommand(files.NewCmdFiles())
 
 	rootCmd.PersistentFlags().String("token", "", "Your authentication token that encodes your CGC credentials.")
 	rootCmd.MarkPersistentFlagRequired("token")
