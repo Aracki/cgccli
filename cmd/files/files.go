@@ -15,6 +15,7 @@ edit their metadata, and delete files, and download them.`,
 	}
 
 	cmd.AddCommand(NewCmdFilesList())
+	cmd.AddCommand(NewCmdFilesStat())
 	return cmd
 }
 
@@ -37,6 +38,26 @@ For each file, the call returns its ID and filename`,
 
 	cmd.Flags().StringVarP(&project, "project", "p", "", "Retrieve the files belonging to the specified project.")
 	cmd.MarkFlagRequired("project")
+
+	return cmd
+}
+
+func NewCmdFilesStat() *cobra.Command {
+	var fileId string
+
+	cmd := &cobra.Command{
+		Use:   "stat",
+		Short: "get file details",
+		Long: `This call returns details about a specified file. The call returns the file's name, its tags, and all of its metadata.
+Files are specified by their IDs, which you can obtain by making the API call to list files in a project.`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			//TODO get file stats
+			return nil
+		},
+	}
+
+	cmd.Flags().StringVarP(&fileId, "file", "f", "", "Get details of the specified file.")
+	cmd.MarkFlagRequired("file")
 
 	return cmd
 }
