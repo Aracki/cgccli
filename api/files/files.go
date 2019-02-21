@@ -2,12 +2,7 @@ package files
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"github.com/aracki/cgccli/api"
-	"github.com/spf13/viper"
-	"io/ioutil"
-	"net/http"
 )
 
 type JsonResponse struct {
@@ -26,24 +21,7 @@ type File struct {
 
 func GetFiles(project string) (files []File, err error) {
 
-	client := &http.Client{}
-
-	method := "GET"
-	url := api.UrlFiles + "?project=" + project
-
-	req, _ := http.NewRequest(method, url, nil)
-	req.Header.Set(api.TokenHeader, viper.GetString("token"))
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return nil, errors.New(fmt.Sprintf("%s method on %s returns %x instead of 200", method, url, resp.StatusCode))
-	}
-
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := api.CGCRequest("GET", api.UrlFiles+"?project="+project, nil)
 	if err != nil {
 		return nil, err
 	}

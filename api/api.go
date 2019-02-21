@@ -1,5 +1,13 @@
 package api
 
+import (
+	"errors"
+	"github.com/spf13/viper"
+	"io"
+	"io/ioutil"
+	"net/http"
+)
+
 const (
 	TokenHeader = "X-SBG-Auth-Token"
 
@@ -8,3 +16,30 @@ const (
 	UrlProjects = UrlBase + "/projects"
 	UrlFiles    = UrlBase + "/files"
 )
+
+func CGCRequest(method string, url string, body io.Reader) (bytesResp []byte, err error) {
+
+	req, err := http.NewRequest(method, url, body)
+	req.Header.Set(TokenHeader, viper.GetString("token"))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// If not OK
+	if resp.StatusCode != http.StatusOK {
+		b, _ := ioutil.ReadAll(resp.Body)
+		return nil , errors.New(string(b))
+	}
+
+	// If OK
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return respBody, nil
+}
