@@ -1,7 +1,6 @@
 package files
 
 import (
-	"fmt"
 	"github.com/aracki/cgccli/api/files"
 	"github.com/spf13/cobra"
 )
@@ -27,8 +26,12 @@ func NewCmdFilesList() *cobra.Command {
 		Short: "list all files in a project",
 		Long: `This call returns a list of all files in a specified project with specified properties that you can access.
 For each file, the call returns its ID and filename`,
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println(files.GetFiles(project))
+		RunE: func(cmd *cobra.Command, args []string) error {
+			allFiles, err := files.GetFiles(project)
+			if err != nil {
+				return err
+			}
+			return printFiles(allFiles)
 		},
 	}
 
