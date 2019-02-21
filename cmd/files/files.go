@@ -71,8 +71,11 @@ func NewCmdFilesStat() *cobra.Command {
 		Short: filesStatShort,
 		Long:  filesStatLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			//TODO get file stats
-			return nil
+			fDetails, err := files.GetFileDetails(fileId)
+			if err != nil {
+				return err
+			}
+			return printFileDetails(*fDetails)
 		},
 	}
 	cmd.Flags().StringVarP(&fileId, filesStatFlagFile, filesStatFlagFileSh, "", filesStatShort)
