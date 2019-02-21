@@ -35,7 +35,8 @@ type FileDetails struct {
 	Origin struct {
 		Dataset string `json:"dataset"`
 	} `json:"origin"`
-	Tags []string `json:"tags"`
+	Tags     []string               `json:"tags"`
+	Metadata map[string]interface{} `json:"metadata"`
 }
 
 func GetFiles(project string) (files []File, err error) {

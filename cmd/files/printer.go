@@ -1,28 +1,32 @@
 package files
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/aracki/cgccli/api/files"
 	"github.com/aracki/cgccli/cmd/util"
+	"io"
 	"reflect"
 )
 
-func filesHeader() string {
-	return fmt.Sprintf("%s\t%s\t%s\t%s\t%s\t",
-		"ID", "NAME", "PARENT", "PROJECT", "TYPE")
-}
+var (
+	filesHeader = fmt.Sprintf("%s\t%s\t%s\t%s\t",
+		"ID", "NAME", "PARENT", "TYPE")
+	fileDetailsHeader = fmt.Sprintf("%s\t%s\t",
+		"KEY", "VALUE")
+)
 
 func printFiles(files []files.File) error {
 
 	w := util.NewTabWriter()
 	defer w.Flush()
 
-	_, err := fmt.Fprintln(w, filesHeader())
+	_, err := fmt.Fprintln(w, filesHeader)
 	if err != nil {
 		return err
 	}
 	for _, f := range files {
-		_, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\t\n", f.Id, f.Name, f.Parent, f.Project, f.Type)
+		_, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t\n", f.Id, f.Name, f.Parent, f.Type)
 		if err != nil {
 			return err
 		}
@@ -30,17 +34,12 @@ func printFiles(files []files.File) error {
 	return nil
 }
 
-func fileDetailsHeader() string {
-	return fmt.Sprintf("%s\t%s\t",
-		"KEY", "VALUE")
-}
-
 func printFileDetails(fDetails files.FileDetails) error {
 
 	w := util.NewTabWriter()
 	defer w.Flush()
 
-	_, err := fmt.Fprintln(w, fileDetailsHeader())
+	_, err := fmt.Fprintln(w, fileDetailsHeader)
 	if err != nil {
 		return err
 	}
@@ -48,10 +47,32 @@ func printFileDetails(fDetails files.FileDetails) error {
 	v := reflect.ValueOf(fDetails)
 
 	for i := 0; i < v.NumField(); i++ {
-		_, err := fmt.Fprintf(w, "%s\t%v\t\n", v.Type().Field(i).Name, v.Field(i).Interface())
-		if err != nil {
-			return err
+
+		// all cases instead of Metadata map field
+		if v.Type().Field(i).Type.Kind() != reflect.Map {
+			_, err := fmt.Fprintf(w, "%s\t%v\t\n", v.Type().Field(i).Name, v.Field(i).Interface())
+			if err != nil {
+				return err
+			}
+		} else {
+			err := prettyPrintMetadata(w, v.Field(i).Interface())
+			if err != nil {
+				return err
+			}
 		}
+	}
+	return nil
+}
+
+func prettyPrintMetadata(w io.Writer, v interface{}) (err error) {
+	b, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	_, err = fmt.Fprintf(w, "\nMETADATA\n %s", string(b))
+	if err != nil {
+		return err
 	}
 	return nil
 }
