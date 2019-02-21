@@ -2,11 +2,11 @@ package projects
 
 import (
 	"fmt"
-	"github.com/aracki/cgccli/api"
+	"github.com/aracki/cgccli/api/projects"
 	"github.com/aracki/cgccli/cmd/util"
 )
 
-func printProjects(projects []api.Project) {
+func printProjects(projects []projects.Project) {
 
 	w := util.NewTabWriter()
 	defer w.Flush()

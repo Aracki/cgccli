@@ -1,7 +1,7 @@
 package projects
 
 import (
-	"github.com/aracki/cgccli/api"
+	"github.com/aracki/cgccli/api/projects"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +25,7 @@ func NewCmdProjectsList() *cobra.Command {
 		Use:   "list",
 		Short: "list all projects",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			projects, err := api.GetProjects()
+			projects, err := projects.GetProjects()
 			if err != nil {
 				return err
 			}
