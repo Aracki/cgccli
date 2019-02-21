@@ -6,15 +6,22 @@ import (
 	"github.com/aracki/cgccli/cmd/util"
 )
 
-func printProjects(projects []projects.Project) {
+func printProjects(projects []projects.Project) error {
 
 	w := util.NewTabWriter()
 	defer w.Flush()
 
-	fmt.Fprintln(w, header())
-	for _, p := range projects {
-		fmt.Fprintf(w, "%s\t%s\t\n", p.Id, p.Name)
+	_, err := fmt.Fprintln(w, header())
+	if err != nil {
+		return err
 	}
+	for _, p := range projects {
+		_, err := fmt.Fprintf(w, "%s\t%s\t\n", p.Id, p.Name)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func header() string {

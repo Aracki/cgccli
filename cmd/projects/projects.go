@@ -25,12 +25,11 @@ func NewCmdProjectsList() *cobra.Command {
 		Use:   "list",
 		Short: "list all projects",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			projects, err := projects.GetProjects()
+			allProjects, err := projects.GetProjects()
 			if err != nil {
 				return err
 			}
-			printProjects(projects)
-			return nil
+			return printProjects(allProjects)
 		},
 	}
 
