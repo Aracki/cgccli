@@ -1,6 +1,7 @@
 package util
 
 import (
+	"io"
 	"os"
 	"text/tabwriter"
 )
@@ -29,10 +30,9 @@ const (
 	tabwriterFlags    = 1
 )
 
+// Change where to spit all outputs of CLI
+var whereToPrint io.Writer = os.Stdout
+
 func NewTabWriter() *tabwriter.Writer {
-
-	w := new(tabwriter.Writer)
-	w.Init(os.Stdout, tabwriterMinWidth, tabwriterTabWidth, tabwriterPadding, tabwriterPadChar, tabwriterFlags)
-
-	return w
+	return tabwriter.NewWriter(whereToPrint, tabwriterMinWidth, tabwriterTabWidth, tabwriterPadding, tabwriterPadChar, tabwriterFlags)
 }
