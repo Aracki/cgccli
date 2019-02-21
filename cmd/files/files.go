@@ -5,28 +5,50 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	filesCmd   = "files"
+	filesShort = "Manage CGC files"
+	filesLong  = `This command enable you to manage project files and their metadata.
+You can return lists of file IDs, copy files between projects,
+edit their metadata, and delete files, and download them.`
+
+	filesListCmd           = "list"
+	filesListFlagProject   = "project"
+	filesListFlagProjectSh = "p"
+	filesListShort         = "Lists the files in the specified project"
+	filesListLong          = `This call returns a list of all files in a specified project with specified properties that you can access.
+The project to find files from is specified as a query parameter in the call. 
+Further file properties to filter by can also be specified as query parameters.`
+
+	filesStatCmd        = "stat"
+	filesStatFlagFile   = "file"
+	filesStatFlagFileSh = "f"
+	filesStatShort      = "Get file details"
+	filesStatLong       = `This call returns details about a specified file. The call returns the file's name, its tags, and all of its metadata.
+Files are specified by their IDs, which you can obtain by making the API call to list files in a project.`
+)
+
 func NewCmdFiles() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "files",
-		Short: "Cancer Genomics Cloud files",
-		Long: `This command enable you to manage project files and their metadata.
-You can return lists of file IDs, copy files between projects,
-edit their metadata, and delete files, and download them.`,
+		Use:   filesCmd,
+		Short: filesShort,
+		Long:  filesLong,
 	}
 
 	cmd.AddCommand(NewCmdFilesList())
 	cmd.AddCommand(NewCmdFilesStat())
+
 	return cmd
 }
 
 func NewCmdFilesList() *cobra.Command {
+
 	var project string
 
 	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "list all files in a project",
-		Long: `This call returns a list of all files in a specified project with specified properties that you can access.
-For each file, the call returns its ID and filename`,
+		Use:   filesListCmd,
+		Short: filesListShort,
+		Long:  filesListLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			allFiles, err := files.GetFiles(project)
 			if err != nil {
@@ -35,29 +57,25 @@ For each file, the call returns its ID and filename`,
 			return printFiles(allFiles)
 		},
 	}
-
-	cmd.Flags().StringVarP(&project, "project", "p", "", "Retrieve the files belonging to the specified project.")
-	cmd.MarkFlagRequired("project")
-
+	cmd.Flags().StringVarP(&project, filesListFlagProject, filesListFlagProjectSh, "", filesListShort)
+	cmd.MarkFlagRequired(filesListFlagProject)
 	return cmd
 }
 
 func NewCmdFilesStat() *cobra.Command {
+
 	var fileId string
 
 	cmd := &cobra.Command{
-		Use:   "stat",
-		Short: "get file details",
-		Long: `This call returns details about a specified file. The call returns the file's name, its tags, and all of its metadata.
-Files are specified by their IDs, which you can obtain by making the API call to list files in a project.`,
+		Use:   filesStatCmd,
+		Short: filesStatShort,
+		Long:  filesStatLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			//TODO get file stats
 			return nil
 		},
 	}
-
-	cmd.Flags().StringVarP(&fileId, "file", "f", "", "Get details of the specified file.")
-	cmd.MarkFlagRequired("file")
-
+	cmd.Flags().StringVarP(&fileId, filesStatFlagFile, filesStatFlagFileSh, "", filesStatShort)
+	cmd.MarkFlagRequired(filesStatFlagFile)
 	return cmd
 }
