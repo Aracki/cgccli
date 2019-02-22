@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 const (
@@ -32,7 +33,7 @@ func CGCRequest(method string, url string, body io.Reader) (bytesResp []byte, er
 	// If not OK
 	if resp.StatusCode != http.StatusOK {
 		b, _ := ioutil.ReadAll(resp.Body)
-		return nil , errors.New(string(b))
+		return nil, errors.New(string(b))
 	}
 
 	// If OK
@@ -42,4 +43,35 @@ func CGCRequest(method string, url string, body io.Reader) (bytesResp []byte, er
 	}
 
 	return respBody, nil
+}
+
+func CGCRequestFiles(method string, url string, body io.Reader) (bytesResp []byte, totalOffset int, err error) {
+
+	req, err := http.NewRequest(method, url, body)
+	req.Header.Set(TokenHeader, viper.GetString("token"))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+
+	// If not OK
+	if resp.StatusCode != http.StatusOK {
+		b, _ := ioutil.ReadAll(resp.Body)
+		return nil, 0, errors.New(string(b))
+	}
+
+	// If OK
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	totalOffset, err = strconv.Atoi(resp.Header.Get("X-Total-Matching-Query"))
+	if err != nil {
+		return nil, 0, err
+	}
+	return respBody, totalOffset, nil
 }
