@@ -1,3 +1,4 @@
+// Package files provides files root command and all its subcommands.
 package files
 
 import (
@@ -26,8 +27,19 @@ Further file properties to filter by can also be specified as query parameters.`
 	filesStatShort      = "Get file details"
 	filesStatLong       = `This call returns details about a specified file. The call returns the file's name, its tags, and all of its metadata.
 Files are specified by their IDs, which you can obtain by making the API call to list files in a project.`
+
+	filesUpdateCmd        = "update"
+	filesUpdateFlagFile   = "file"
+	filesUpdateFlagFileSh = "f"
+	filesUpdateShort      = "Update file details"
+	filesUpdateLong       = `This call updates the name, the full set metadata, and tags for a specified file.
+Files are specified by their IDs, which you can obtain by making the API call to list files in a project.
+A full list of metadata fields and their permissible values on the CGC is available on the page TCGA Metadata [` + metadataLinks
+	metadataLinks = "https://docs.cancergenomicscloud.org/v1.0/docs/metadata-for-private-data"
 )
 
+// NewCmdFiles is the root command for files.
+// All subcommands regarding to files are added here.
 func NewCmdFiles() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   filesCmd,
@@ -37,6 +49,7 @@ func NewCmdFiles() *cobra.Command {
 
 	cmd.AddCommand(NewCmdFilesList())
 	cmd.AddCommand(NewCmdFilesStat())
+	cmd.AddCommand(NewCmdFilesUpdate())
 
 	return cmd
 }
@@ -79,6 +92,23 @@ func NewCmdFilesStat() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVarP(&fileId, filesStatFlagFile, filesStatFlagFileSh, "", filesStatShort)
+	cmd.MarkFlagRequired(filesStatFlagFile)
+	return cmd
+}
+
+func NewCmdFilesUpdate() *cobra.Command {
+	var fileId string
+
+	cmd := &cobra.Command{
+		Use:   filesUpdateCmd,
+		Short: filesUpdateShort,
+		Long:  filesUpdateLong,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			//	TODO update file
+			return nil
+		},
+	}
+	cmd.Flags().StringVarP(&fileId, filesUpdateFlagFile, filesUpdateFlagFileSh, "", filesUpdateShort)
 	cmd.MarkFlagRequired(filesStatFlagFile)
 	return cmd
 }

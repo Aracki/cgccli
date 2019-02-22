@@ -1,3 +1,4 @@
+// Package projects provides projects root command and all its subcommands.
 package projects
 
 import (
@@ -19,6 +20,8 @@ Projects are shared only by designated project members.`
 Each project's project_id and URL on the CGC will be returned.`
 )
 
+// NewCmdProjects is the root command for projects.
+// All subcommands regarding to projects are added here.
 func NewCmdProjects() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   projectsCmd,
