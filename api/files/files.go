@@ -110,17 +110,31 @@ func GetFileDetails(fileId string) (fDetails *FileDetails, err error) {
 }
 
 // UpdateFileDetails will update file details for that fileId.
-func UpdateFileDetails(fileId string, fdMap FileDetailsMap) error {
+func UpdateFileDetails(fileId string, fdMap FileDetailsMap) (respBody []byte, err error) {
+
+	if _, ok := fdMap["metadata"]; ok {
+
+		jsonMetadata, err := json.Marshal(fdMap["metadata"])
+		if err != nil {
+			return nil, err
+		}
+		_, err = api.CGCRequestBody("PATCH", api.UrlFiles+"/"+fileId+"/metadata", bytes.NewBuffer(jsonMetadata))
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	delete(fdMap, "metadata")
 
 	jsonBody, err := json.Marshal(fdMap)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = api.CGCRequestBody("PATCH", api.UrlFiles+"/"+fileId, bytes.NewBuffer(jsonBody))
+	respBody, err = api.CGCRequestBody("PATCH", api.UrlFiles+"/"+fileId, bytes.NewBuffer(jsonBody))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return respBody, nil
 }

@@ -2,6 +2,7 @@
 package files
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/aracki/cgccli/api/files"
@@ -99,8 +100,9 @@ func NewCmdFilesStat() *cobra.Command {
 	return cmd
 }
 
-// NewCmdFilesUpdate will update file bases on given args.
-// It will print file details after update is successfully done.
+// NewCmdFilesUpdate will update file bases on the given arguments.
+// Args can be passed in following format:
+// name=<name>   tags=<tag1,tag2,...>   metadata.<key>=<value>
 func NewCmdFilesUpdate() *cobra.Command {
 	var fileId string
 
@@ -111,12 +113,12 @@ func NewCmdFilesUpdate() *cobra.Command {
 		Args:  cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fdMap := files.FileDetailsMap{}
-			fdMtDtMap := files.FileDetailsMetadataMap{}
+			fdMetaDataMap := files.FileDetailsMetadataMap{}
 
 			for _, arg := range args {
 				if !strings.Contains(arg, "=") {
 					return errors.New(fmt.Sprintf(
-						"%s arg error; args need to be passed in key=value format", arg))
+						"\"%s\" arg error; args need to be passed in key=value format", arg))
 				} else {
 					argKey := strings.Split(arg, "=")[0]
 					argValue := strings.Split(arg, "=")[1]
@@ -125,23 +127,26 @@ func NewCmdFilesUpdate() *cobra.Command {
 						fdMap[argKey] = []string(tagsArr)
 					} else if strings.Contains(argKey, "metadata.") {
 						metadataKey := strings.Split(argKey, ".")[1]
-						fdMtDtMap[metadataKey] = argValue
-						fdMap["metadata"] = fdMtDtMap
+						fdMetaDataMap[metadataKey] = argValue
+						fdMap["metadata"] = fdMetaDataMap
 					} else {
 						fdMap[argKey] = argValue
 					}
 				}
 			}
 
-			err := files.UpdateFileDetails(fileId, fdMap)
+			respBody, err := files.UpdateFileDetails(fileId, fdMap)
 			if err != nil {
 				return err
 			}
-			fd, err := files.GetFileDetails(fileId)
+
+			fd := files.FileDetails{}
+			err = json.Unmarshal(respBody, &fd)
 			if err != nil {
 				return err
 			}
-			return printFileDetails(*fd)
+
+			return printFileDetails(fd)
 		},
 	}
 	cmd.Flags().StringVarP(&fileId, filesUpdateFlagFile, filesUpdateFlagFileSh, "", filesUpdateShort)
