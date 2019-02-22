@@ -38,7 +38,6 @@ func CGCRequest(method string, url string, body io.Reader) (resp *http.Response,
 
 	if resp.StatusCode != http.StatusOK {
 		defer resp.Body.Close()
-		resp.Body.Close()
 		b, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return nil, errors.Wrap(err, "cannot read body")
@@ -52,6 +51,9 @@ func CGCRequest(method string, url string, body io.Reader) (resp *http.Response,
 func CGCRequestBody(method string, url string, body io.Reader) (respBody []byte, err error) {
 
 	resp, err := CGCRequest(method, url, body)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	respBody, err = ioutil.ReadAll(resp.Body)
@@ -64,6 +66,9 @@ func CGCRequestBody(method string, url string, body io.Reader) (respBody []byte,
 func CGCRequestBodyTotalOffset(method string, url string, body io.Reader) (bytesResp []byte, totalOffset int, err error) {
 
 	resp, err := CGCRequest(method, url, body)
+	if err != nil {
+		return nil, 0, err
+	}
 	defer resp.Body.Close()
 
 	totalOffset, err = strconv.Atoi(resp.Header.Get("X-Total-Matching-Query"))
