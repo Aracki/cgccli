@@ -38,8 +38,8 @@ type FileDetails struct {
 	Origin struct {
 		Dataset string `json:"dataset"`
 	} `json:"origin"`
-	Tags     []string               `json:"tags"`
-	Metadata map[string]interface{} `json:"metadata"`
+	Tags     []string          `json:"tags"`
+	Metadata map[string]string `json:"metadata"`
 }
 
 // GetFiles will get first 50 (default limit) files for the given project. The totalOffset is obtained from X-Total-Matching-Query header.
