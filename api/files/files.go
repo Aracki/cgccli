@@ -44,6 +44,7 @@ type FileDetails struct {
 }
 
 type FileDetailsMap map[string]interface{}
+type FileDetailsMetadataMap map[string]string
 
 // GetFiles will get first 1-100 (limit) files for the given project. 
 // The totalOffset is obtained from X-Total-Matching-Query header.
@@ -116,11 +117,10 @@ func UpdateFileDetails(fileId string, fdMap FileDetailsMap) error {
 		return err
 	}
 
-	respBody, err := api.CGCRequestBody("PATCH", api.UrlFiles+"/"+fileId, bytes.NewBuffer(jsonBody))
+	_, err = api.CGCRequestBody("PATCH", api.UrlFiles+"/"+fileId, bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("%s", respBody)
 	return nil
 }

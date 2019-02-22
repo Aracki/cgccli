@@ -99,6 +99,8 @@ func NewCmdFilesStat() *cobra.Command {
 	return cmd
 }
 
+// NewCmdFilesUpdate will update file bases on given args.
+// It will print file details after update is successfully done.
 func NewCmdFilesUpdate() *cobra.Command {
 	var fileId string
 
@@ -108,25 +110,38 @@ func NewCmdFilesUpdate() *cobra.Command {
 		Long:  filesUpdateLong,
 		Args:  cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			fd := files.FileDetailsMap{}
+			fdMap := files.FileDetailsMap{}
+			fdMtDtMap := files.FileDetailsMetadataMap{}
+
 			for _, arg := range args {
 				if !strings.Contains(arg, "=") {
 					return errors.New(fmt.Sprintf(
 						"%s arg error; args need to be passed in key=value format", arg))
 				} else {
-					k := strings.Split(arg, "=")[0]
-					v := strings.Split(arg, "=")[1]
-					if k == "tags" {
-						tagsStr := arg[len(k)+1:]
-						tagsArr := strings.Split(tagsStr, ",")
-						fd[k] = []string(tagsArr)
+					argKey := strings.Split(arg, "=")[0]
+					argValue := strings.Split(arg, "=")[1]
+					if argKey == "tags" {
+						tagsArr := strings.Split(argValue, ",")
+						fdMap[argKey] = []string(tagsArr)
+					} else if strings.Contains(argKey, "metadata.") {
+						metadataKey := strings.Split(argKey, ".")[1]
+						fdMtDtMap[metadataKey] = argValue
+						fdMap["metadata"] = fdMtDtMap
 					} else {
-						fd[k] = v
+						fdMap[argKey] = argValue
 					}
 				}
 			}
 
-			return files.UpdateFileDetails(fileId, fd)
+			err := files.UpdateFileDetails(fileId, fdMap)
+			if err != nil {
+				return err
+			}
+			fd, err := files.GetFileDetails(fileId)
+			if err != nil {
+				return err
+			}
+			return printFileDetails(*fd)
 		},
 	}
 	cmd.Flags().StringVarP(&fileId, filesUpdateFlagFile, filesUpdateFlagFileSh, "", filesUpdateShort)
