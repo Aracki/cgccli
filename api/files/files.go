@@ -65,7 +65,7 @@ func GetFiles(project string) (files []File, err error) {
 	q.Set("project", project)
 	url.RawQuery = q.Encode()
 
-	respBody, totalOffset, err := api.CGCRequestBodyTotalOffset("GET", url.String(), nil)
+	respBody, totalOffset, err := api.CGCRequestAndReadTotalOffset("GET", url.String(), nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "GET files failed")
 	}
@@ -83,7 +83,7 @@ func GetFiles(project string) (files []File, err error) {
 
 		q.Set("offset", offset)
 		url.RawQuery = q.Encode()
-		respBody, _, err := api.CGCRequestBodyTotalOffset("GET", url.String(), nil)
+		respBody, _, err := api.CGCRequestAndReadTotalOffset("GET", url.String(), nil)
 		if err != nil {
 			return nil, errors.Wrap(err, "GET files with offset failed")
 		}
@@ -102,7 +102,7 @@ func GetFiles(project string) (files []File, err error) {
 // GetFileDetails will get all the details for that fileId.
 func GetFileDetails(fileId string) (fDetails *FileDetails, err error) {
 
-	respBody, err := api.CGCRequestBody("GET", api.UrlFiles+"/"+fileId, nil)
+	respBody, err := api.CGCRequestAndRead("GET", api.UrlFiles+"/"+fileId, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "GET file details failed")
 	}
@@ -127,7 +127,7 @@ func UpdateFileDetails(fileId string, fdMap FileDetailsMap) (respBody []byte, er
 		if err != nil {
 			return nil, errors.Wrap(err, "marshaling metadata map failed")
 		}
-		_, err = api.CGCRequestBody("PATCH", urlFileMetadata, bytes.NewBuffer(jsonMetadata))
+		_, err = api.CGCRequestAndRead("PATCH", urlFileMetadata, bytes.NewBuffer(jsonMetadata))
 		if err != nil {
 			return nil, errors.Wrap(err, "PATCH metadata failed")
 		}
@@ -140,7 +140,7 @@ func UpdateFileDetails(fileId string, fdMap FileDetailsMap) (respBody []byte, er
 		return nil, errors.Wrap(err, "marshaling file details map failed")
 	}
 
-	respBody, err = api.CGCRequestBody("PATCH", urlFile, bytes.NewBuffer(jsonBody))
+	respBody, err = api.CGCRequestAndRead("PATCH", urlFile, bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return nil, errors.Wrap(err, "PATCH file details failed")
 	}

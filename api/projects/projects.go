@@ -21,7 +21,7 @@ type Project struct {
 // Each project's ID and URL will be returned.
 func GetProjects() (projects []Project, err error) {
 
-	respBody, err := api.CGCRequestBody("GET", api.UrlProjects, nil)
+	respBody, err := api.CGCRequestAndRead("GET", api.UrlProjects, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "GET projects failed")
 	}

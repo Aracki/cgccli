@@ -48,7 +48,7 @@ func CGCRequest(method string, url string, body io.Reader) (resp *http.Response,
 	return resp, nil
 }
 
-func CGCRequestBody(method string, url string, body io.Reader) (respBody []byte, err error) {
+func CGCRequestAndRead(method string, url string, body io.Reader) (respBody []byte, err error) {
 
 	resp, err := CGCRequest(method, url, body)
 	if err != nil {
@@ -63,7 +63,7 @@ func CGCRequestBody(method string, url string, body io.Reader) (respBody []byte,
 	return respBody, nil
 }
 
-func CGCRequestBodyTotalOffset(method string, url string, body io.Reader) (bytesResp []byte, totalOffset int, err error) {
+func CGCRequestAndReadTotalOffset(method string, url string, body io.Reader) (bytesResp []byte, totalOffset int, err error) {
 
 	resp, err := CGCRequest(method, url, body)
 	if err != nil {
