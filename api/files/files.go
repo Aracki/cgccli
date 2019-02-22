@@ -1,6 +1,7 @@
 package files
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/aracki/cgccli/api"
@@ -42,19 +43,27 @@ type FileDetails struct {
 	Metadata map[string]string `json:"metadata"`
 }
 
-// GetFiles will get first 50 (default limit) files for the given project. The totalOffset is obtained from X-Total-Matching-Query header.
+type FileDetailsUpdate struct {
+	Name     string            `json:"name"`
+	Tags     []string          `json:"tags"`
+	Metadata map[string]string `json:"metadata"`
+}
+
+// GetFiles will get first 1-100 (limit) files for the given project. 
+// The totalOffset is obtained from X-Total-Matching-Query header.
 // Based on that value we know how many times to make a new GET request.
 // On each GET request we get []byte which we unmarshal to array of files.
 // All file arrays gets merged into one which this function returns.
 func GetFiles(project string) (files []File, err error) {
 
-	// if omitted; default is 50
+	// If omitted, default is 50
+	// The minimum value for the query parameter limit is 1.
 	// The maximum value for the query parameter limit is 100.
 	limit := 100
 	limitS := strconv.Itoa(limit)
 
 	url := api.UrlFiles + "?limit=" + limitS + "&project=" + project
-	respBody, totalOffset, err := api.CGCRequestFiles("GET", url, nil)
+	respBody, totalOffset, err := api.CGCRequestBodyTotalOffset("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +80,7 @@ func GetFiles(project string) (files []File, err error) {
 		offset := strconv.Itoa(limit * i)
 
 		url := api.UrlFiles + "?offset=" + offset + "&limit=" + limitS + "&project=" + project
-		respBody, _, err := api.CGCRequestFiles("GET", url, nil)
+		respBody, _, err := api.CGCRequestBodyTotalOffset("GET", url, nil)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprint("CGCRequestFiles failed"))
 		}
@@ -87,9 +96,10 @@ func GetFiles(project string) (files []File, err error) {
 	return files, nil
 }
 
+// GetFileDetails will get all the details for that fileId.
 func GetFileDetails(fileId string) (fDetails *FileDetails, err error) {
 
-	respBody, err := api.CGCRequest("GET", api.UrlFiles+"/"+fileId, nil)
+	respBody, err := api.CGCRequestBody("GET", api.UrlFiles+"/"+fileId, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -100,4 +110,21 @@ func GetFileDetails(fileId string) (fDetails *FileDetails, err error) {
 	}
 
 	return fDetails, nil
+}
+
+// UpdateFileDetails will update file details for that fileId.
+func UpdateFileDetails(fileId string, fdUpdate FileDetailsUpdate) error {
+
+	jsonBody, err := json.Marshal(fdUpdate)
+	if err != nil {
+		return err
+	}
+
+	respBody, err := api.CGCRequestBody("PATCH", api.UrlFiles+"/"+fileId, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%s", respBody)
+	return nil
 }

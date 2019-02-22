@@ -104,8 +104,11 @@ func NewCmdFilesUpdate() *cobra.Command {
 		Short: filesUpdateShort,
 		Long:  filesUpdateLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			//	TODO update file
-			return nil
+			// todo this is for testing
+			fd := files.FileDetailsUpdate{
+				Name: "Heavy File",
+			}
+			return files.UpdateFileDetails(fileId, fd)
 		},
 	}
 	cmd.Flags().StringVarP(&fileId, filesUpdateFlagFile, filesUpdateFlagFileSh, "", filesUpdateShort)

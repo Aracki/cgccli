@@ -16,9 +16,11 @@ type Project struct {
 	Name string `json:"name"`
 }
 
+// GetProjects will list the projects owned by and accessible to a particular user.
+// Each project's ID and URL will be returned.
 func GetProjects() (projects []Project, err error) {
 
-	respBody, err := api.CGCRequest("GET", api.UrlProjects, nil)
+	respBody, err := api.CGCRequestBody("GET", api.UrlProjects, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -64,6 +64,7 @@ func printFileDetails(fDetails files.FileDetails) error {
 	return nil
 }
 
+// prettyPrintMetadata will print Metadata map[string]string on the bottom as a json.
 func prettyPrintMetadata(w io.Writer, v interface{}) (err error) {
 	b, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
