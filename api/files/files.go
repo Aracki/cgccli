@@ -43,11 +43,7 @@ type FileDetails struct {
 	Metadata map[string]string `json:"metadata"`
 }
 
-type FileDetailsUpdate struct {
-	Name     string            `json:"name"`
-	Tags     []string          `json:"tags"`
-	Metadata map[string]string `json:"metadata"`
-}
+type FileDetailsMap map[string]interface{}
 
 // GetFiles will get first 1-100 (limit) files for the given project. 
 // The totalOffset is obtained from X-Total-Matching-Query header.
@@ -113,9 +109,9 @@ func GetFileDetails(fileId string) (fDetails *FileDetails, err error) {
 }
 
 // UpdateFileDetails will update file details for that fileId.
-func UpdateFileDetails(fileId string, fdUpdate FileDetailsUpdate) error {
+func UpdateFileDetails(fileId string, fdMap FileDetailsMap) error {
 
-	jsonBody, err := json.Marshal(fdUpdate)
+	jsonBody, err := json.Marshal(fdMap)
 	if err != nil {
 		return err
 	}

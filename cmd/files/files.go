@@ -2,8 +2,11 @@
 package files
 
 import (
+	"errors"
+	"fmt"
 	"github.com/aracki/cgccli/api/files"
 	"github.com/spf13/cobra"
+	"strings"
 )
 
 var (
@@ -34,7 +37,7 @@ Files are specified by their IDs, which you can obtain by making the API call to
 	filesUpdateShort      = "Update file details"
 	filesUpdateLong       = `This call updates the name, the full set metadata, and tags for a specified file.
 Files are specified by their IDs, which you can obtain by making the API call to list files in a project.
-A full list of metadata fields and their permissible values on the CGC is available on the page TCGA Metadata [` + metadataLinks
+A full list of metadata fields and their permissible values on the CGC is available on the page TCGA Metadata [` + metadataLinks + `]`
 	metadataLinks = "https://docs.cancergenomicscloud.org/v1.0/docs/metadata-for-private-data"
 )
 
@@ -103,11 +106,24 @@ func NewCmdFilesUpdate() *cobra.Command {
 		Use:   filesUpdateCmd,
 		Short: filesUpdateShort,
 		Long:  filesUpdateLong,
+		Args:  cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// todo this is for testing
-			fd := files.FileDetailsUpdate{
-				Name: "Heavy File",
+			fd := files.FileDetailsMap{}
+			for _, arg := range args {
+				if !strings.Contains(arg, "=") {
+					return errors.New(fmt.Sprintf(
+						"%s arg error; args need to be passed in key=value format", arg))
+				} else {
+					k := strings.Split(arg, "=")[0]
+					v := strings.Split(arg, "=")[1]
+					if k == "tags" {
+						fd[k] = []string{v}
+					} else {
+						fd[k] = v
+					}
+				}
 			}
+
 			return files.UpdateFileDetails(fileId, fd)
 		},
 	}
