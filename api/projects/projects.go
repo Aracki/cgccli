@@ -3,6 +3,7 @@ package projects
 import (
 	"encoding/json"
 	"github.com/aracki/cgccli/api"
+	"github.com/pkg/errors"
 )
 
 type JsonResponse struct {
@@ -22,13 +23,13 @@ func GetProjects() (projects []Project, err error) {
 
 	respBody, err := api.CGCRequestBody("GET", api.UrlProjects, nil)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "GET projects failed")
 	}
 
 	var jsonResp JsonResponse
 	err = json.Unmarshal(respBody, &jsonResp)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err,"unmarshaling projects failed")
 	}
 
 	return jsonResp.Items, nil

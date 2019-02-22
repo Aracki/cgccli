@@ -67,12 +67,12 @@ func GetFiles(project string) (files []File, err error) {
 
 	respBody, totalOffset, err := api.CGCRequestBodyTotalOffset("GET", url.String(), nil)
 	if err != nil {
-		return nil, errors.Wrap(err, "CGCRequestBodyTotalOffset request failed")
+		return nil, errors.Wrap(err, "GET files failed")
 	}
 	jsonResp := JsonResponse{}
 	err = json.Unmarshal(respBody, &jsonResp)
 	if err != nil {
-		return nil, errors.Wrap(err, "unmarshaling CGCRequestBodyTotalOffset response failed")
+		return nil, errors.Wrap(err, "unmarshaling files failed")
 	}
 
 	files = append(files, jsonResp.Items...)
@@ -85,13 +85,13 @@ func GetFiles(project string) (files []File, err error) {
 		url.RawQuery = q.Encode()
 		respBody, _, err := api.CGCRequestBodyTotalOffset("GET", url.String(), nil)
 		if err != nil {
-			return nil, errors.Wrap(err, "CGCRequestFiles request failed")
+			return nil, errors.Wrap(err, "GET files with offset failed")
 		}
 
 		jsonResp = JsonResponse{}
 		err = json.Unmarshal(respBody, &jsonResp)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("unmarshaling CGCRequestFiles response failed for block num %d", i))
+			return nil, errors.Wrap(err, fmt.Sprintf("unmarshaling files failed for block num %d", i))
 		}
 
 		files = append(files, jsonResp.Items...)
@@ -104,12 +104,12 @@ func GetFileDetails(fileId string) (fDetails *FileDetails, err error) {
 
 	respBody, err := api.CGCRequestBody("GET", api.UrlFiles+"/"+fileId, nil)
 	if err != nil {
-		return nil, errors.Wrap(err, "CGCRequestBody request failed")
+		return nil, errors.Wrap(err, "GET file details failed")
 	}
 
 	err = json.Unmarshal(respBody, &fDetails)
 	if err != nil {
-		return nil, errors.Wrap(err, "unmarshaling CGCRequestBody response failed")
+		return nil, errors.Wrap(err, "unmarshaling file details failed")
 	}
 
 	return fDetails, nil
@@ -129,7 +129,7 @@ func UpdateFileDetails(fileId string, fdMap FileDetailsMap) (respBody []byte, er
 		}
 		_, err = api.CGCRequestBody("PATCH", urlFileMetadata, bytes.NewBuffer(jsonMetadata))
 		if err != nil {
-			return nil, errors.Wrap(err, "CGCRequestBody PATCH metadata failed")
+			return nil, errors.Wrap(err, "PATCH metadata failed")
 		}
 	}
 
@@ -142,7 +142,7 @@ func UpdateFileDetails(fileId string, fdMap FileDetailsMap) (respBody []byte, er
 
 	respBody, err = api.CGCRequestBody("PATCH", urlFile, bytes.NewBuffer(jsonBody))
 	if err != nil {
-		return nil, errors.Wrap(err, "CGCRequestBody PATCH file details failed")
+		return nil, errors.Wrap(err, "PATCH file details failed")
 	}
 
 	return respBody, nil
