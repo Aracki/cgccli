@@ -48,14 +48,14 @@ func printFileDetails(fDetails files.FileDetails) error {
 
 	for i := 0; i < v.NumField(); i++ {
 
-		// all cases instead of Metadata map field
-		if v.Type().Field(i).Type.Kind() != reflect.Map {
-			_, err := fmt.Fprintf(w, "%s\t%v\t\n", v.Type().Field(i).Name, v.Field(i).Interface())
+		switch v.Type().Field(i).Type.Kind() {
+		case reflect.Map:
+			err := prettyPrintMetadata(w, v.Field(i).Interface())
 			if err != nil {
 				return err
 			}
-		} else {
-			err := prettyPrintMetadata(w, v.Field(i).Interface())
+		default:
+			_, err := fmt.Fprintf(w, "%s\t%v\t\n", v.Type().Field(i).Name, v.Field(i).Interface())
 			if err != nil {
 				return err
 			}
