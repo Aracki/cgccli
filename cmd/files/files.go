@@ -117,7 +117,9 @@ func NewCmdFilesUpdate() *cobra.Command {
 					k := strings.Split(arg, "=")[0]
 					v := strings.Split(arg, "=")[1]
 					if k == "tags" {
-						fd[k] = []string{v}
+						tagsStr := arg[len(k)+1:]
+						tagsArr := strings.Split(tagsStr, ",")
+						fd[k] = []string(tagsArr)
 					} else {
 						fd[k] = v
 					}
