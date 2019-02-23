@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/url"
 	"os"
+	"os/signal"
 	"strconv"
 )
 
@@ -156,6 +157,7 @@ func UpdateFileDetails(fileId string, fdMap FileDetailsMap) (respBody []byte, er
 	return respBody, nil
 }
 
+// GetDownloadLink gets download link for the given file id.
 func GetDownloadLink(fileId string) (fUrl FileUrl, err error) {
 
 	urlF := api.UrlFiles + "/" + fileId + "/download_info"
@@ -172,6 +174,8 @@ func GetDownloadLink(fileId string) (fUrl FileUrl, err error) {
 	return fUrl, nil
 }
 
+// DownloadFile writes file response to destination file.
+// If interrupted, removes the invalid file.
 func DownloadFile(fileUrl string, dest string) error {
 
 	resp, err := api.CGCRequest("GET", fileUrl, nil)
@@ -186,10 +190,27 @@ func DownloadFile(fileUrl string, dest string) error {
 	}
 	defer f.Close()
 
+	// handle ^C signal
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		<-c
+		cleanup(dest)
+		os.Exit(1)
+	}()
+
 	_, err = io.Copy(f, resp.Body)
 	if err != nil {
-		// todo Delete invalid file in this case?
+		cleanup(dest)
 		return errors.Wrap(err, "downloading file failed")
 	}
 	return nil
+}
+
+func cleanup(dest string) {
+	err := os.Remove(dest)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("\n file \"%s\" deleted\n", dest)
 }
