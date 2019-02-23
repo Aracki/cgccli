@@ -116,6 +116,8 @@ func GetFileDetails(fileId string) (fDetails *FileDetails, err error) {
 }
 
 // UpdateFileDetails will update file details for that fileId.
+// It will make two separate PATCH requests.
+// One is for updating multiple metadata fields; the other is for basic fields like name and tags
 func UpdateFileDetails(fileId string, fdMap FileDetailsMap) (respBody []byte, err error) {
 
 	urlFile := api.UrlFiles + "/" + fileId

@@ -1,3 +1,5 @@
+// Package files implements functions
+// that write api object fields with initialized tab writer.
 package files
 
 import (
@@ -16,6 +18,7 @@ var (
 		"KEY", "VALUE")
 )
 
+// printFiles prints the files array.
 func printFiles(files []files.File) error {
 
 	w := util.NewTabWriter()
@@ -34,6 +37,8 @@ func printFiles(files []files.File) error {
 	return nil
 }
 
+// printFileDetails prints all the fields of a particular file.
+// It prints all the fields in default fashion, except maps that prints as a json.
 func printFileDetails(fDetails files.FileDetails) error {
 
 	w := util.NewTabWriter()
@@ -64,7 +69,7 @@ func printFileDetails(fDetails files.FileDetails) error {
 	return nil
 }
 
-// prettyPrintMetadata will print Metadata map[string]string on the bottom as a json.
+// prettyPrintMetadata prints metadata map as a json.
 func prettyPrintMetadata(w io.Writer, v interface{}) (err error) {
 	b, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {

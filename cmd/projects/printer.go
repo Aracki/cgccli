@@ -1,3 +1,5 @@
+// Package projects implements functions
+// that write api object fields with initialized tab writer.
 package projects
 
 import (
@@ -6,6 +8,7 @@ import (
 	"github.com/aracki/cgccli/cmd/util"
 )
 
+// printProjects prints the projects array.
 func printProjects(projects []projects.Project) error {
 
 	w := util.NewTabWriter()

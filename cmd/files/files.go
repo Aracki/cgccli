@@ -58,6 +58,7 @@ func NewCmdFiles() *cobra.Command {
 	return cmd
 }
 
+// NewCmdFilesList lists all the files for a specific project.
 func NewCmdFilesList() *cobra.Command {
 
 	var project string
@@ -79,6 +80,7 @@ func NewCmdFilesList() *cobra.Command {
 	return cmd
 }
 
+// NewCmdFilesStat gets all the details for a specific file.
 func NewCmdFilesStat() *cobra.Command {
 
 	var fileId string

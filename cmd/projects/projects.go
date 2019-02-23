@@ -34,6 +34,7 @@ func NewCmdProjects() *cobra.Command {
 	return cmd
 }
 
+// NewCmdProjectsList lists all the projects.
 func NewCmdProjectsList() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   projectsListCmd,
