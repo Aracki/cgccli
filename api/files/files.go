@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aracki/cgccli/api"
-	"github.com/dustin/go-humanize"
+	"github.com/aracki/cgccli/cmd/util"
 	"github.com/pkg/errors"
 	"io"
 	"net/url"
 	"os"
 	"os/signal"
 	"strconv"
-	"strings"
 )
 
 type JsonResponse struct {
@@ -201,7 +200,7 @@ func DownloadFile(fileUrl string, dest string) error {
 		os.Exit(1)
 	}()
 
-	counter := &WriteCounter{}
+	counter := &util.WriteCounter{}
 	_, err = io.Copy(f, io.TeeReader(resp.Body, counter))
 	if err != nil {
 		cleanup(dest)
@@ -216,28 +215,4 @@ func cleanup(dest string) {
 		fmt.Println(err)
 	}
 	fmt.Printf("\n file \"%s\" deleted\n", dest)
-}
-
-// WriteCounter counts the number of bytes written to it. It implements to the io.Writer
-// interface and we can pass this into io.TeeReader() which will report progress on each
-// write cycle.
-type WriteCounter struct {
-	Total uint64
-}
-
-func (wc *WriteCounter) Write(p []byte) (int, error) {
-	n := len(p)
-	wc.Total += uint64(n)
-	wc.PrintProgress()
-	return n, nil
-}
-
-func (wc WriteCounter) PrintProgress() {
-	// Clear the line by using a character return to go back to the start and remove
-	// the remaining characters by filling it with spaces
-	fmt.Printf("\r%s", strings.Repeat(" ", 35))
-
-	// Return again and print current status of download
-	// We use the humanize package to print the bytes in a meaningful way (e.g. 10 MB)
-	fmt.Printf("\rDownloading... %s complete", humanize.Bytes(wc.Total))
 }
