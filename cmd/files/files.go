@@ -179,6 +179,11 @@ func NewCmdFilesDownload() *cobra.Command {
 		Long:  filesDownloadLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// todo get the url; download the file
+			fUrl, err := files.GetDownloadLink(fileId)
+			if err != nil {
+				return err
+			}
+			fmt.Println(fUrl.Url)
 			return nil
 		},
 	}

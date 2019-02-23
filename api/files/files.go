@@ -44,6 +44,10 @@ type FileDetails struct {
 	Metadata map[string]string `json:"metadata"`
 }
 
+type FileUrl struct {
+	Url string `json:"url"`
+}
+
 type FileDetailsMap map[string]interface{}
 type FileDetailsMetadataMap map[string]string
 
@@ -148,4 +152,20 @@ func UpdateFileDetails(fileId string, fdMap FileDetailsMap) (respBody []byte, er
 	}
 
 	return respBody, nil
+}
+
+func GetDownloadLink(fileId string) (fUrl FileUrl, err error) {
+
+	urlF := api.UrlFiles + "/" + fileId + "/download_info"
+	respBody, err := api.CGCRequestAndRead("GET", urlF, nil)
+	if err != nil {
+		return fUrl, err
+	}
+
+	err = json.Unmarshal(respBody, &fUrl)
+	if err != nil {
+		return fUrl, err
+	}
+
+	return fUrl, nil
 }
