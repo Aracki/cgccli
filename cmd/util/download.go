@@ -1,10 +1,7 @@
 package util
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/dustin/go-humanize"
+	"gopkg.in/cheggaaa/pb.v1"
 )
 
 // WriteCounter counts the number of bytes written to it. It implements to the io.Writer
@@ -12,21 +9,16 @@ import (
 // write cycle.
 type WriteCounter struct {
 	Total uint64
+	Bar   *pb.ProgressBar
 }
 
 func (wc *WriteCounter) Write(p []byte) (int, error) {
 	n := len(p)
 	wc.Total += uint64(n)
-	wc.PrintProgress()
+	wc.incrementProgressBar()
 	return n, nil
 }
 
-func (wc WriteCounter) PrintProgress() {
-	// Clear the line by using a character return to go back to the start and remove
-	// the remaining characters by filling it with spaces
-	fmt.Printf("\r%s", strings.Repeat(" ", 35))
-
-	// Return again and print current status of download
-	// We use the humanize package to print the bytes in a meaningful way (e.g. 10 MB)
-	fmt.Printf("\rDownloading... %s complete", humanize.Bytes(wc.Total))
+func (wc WriteCounter) incrementProgressBar() {
+	wc.Bar.Set64(int64(wc.Total))
 }

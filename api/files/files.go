@@ -7,6 +7,7 @@ import (
 	"github.com/aracki/cgccli/api"
 	"github.com/aracki/cgccli/cmd/util"
 	"github.com/pkg/errors"
+	"gopkg.in/cheggaaa/pb.v1"
 	"io"
 	"net/url"
 	"os"
@@ -200,7 +201,14 @@ func DownloadFile(fileUrl string, dest string) error {
 		os.Exit(1)
 	}()
 
+	bar := pb.New64(resp.ContentLength)
 	counter := &util.WriteCounter{}
+	counter.Bar = bar
+	counter.Bar.ShowTimeLeft = true
+	counter.Bar.ShowSpeed = true
+	counter.Bar.SetUnits(pb.U_BYTES)
+	counter.Bar.Start()
+
 	_, err = io.Copy(f, io.TeeReader(resp.Body, counter))
 	if err != nil {
 		cleanup(dest)
