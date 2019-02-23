@@ -40,6 +40,15 @@ Files are specified by their IDs, which you can obtain by making the API call to
 Files are specified by their IDs, which you can obtain by making the API call to list files in a project.
 A full list of metadata fields and their permissible values on the CGC is available on the page TCGA Metadata [` + metadataLinks + `]`
 	metadataLinks = "https://docs.cancergenomicscloud.org/v1.0/docs/metadata-for-private-data"
+
+	filesDownloadCmd           = "download"
+	filesDownloadFlagFile      = "file"
+	filesDownloadFlagFileSh    = "f"
+	filesDownloadFlagFileUsage = "File id to download"
+	filesDownloadFlagDest      = "dest"
+	filesDownloadFlagDestUsage = "Where to download file"
+	filesDownloadShort         = "Download file"
+	filesDownloadLong          = `This call returns a URL that you can use to download the specified file.`
 )
 
 // NewCmdFiles is the root command for files.
@@ -54,6 +63,7 @@ func NewCmdFiles() *cobra.Command {
 	cmd.AddCommand(NewCmdFilesList())
 	cmd.AddCommand(NewCmdFilesStat())
 	cmd.AddCommand(NewCmdFilesUpdate())
+	cmd.AddCommand(NewCmdFilesDownload())
 
 	return cmd
 }
@@ -102,7 +112,7 @@ func NewCmdFilesStat() *cobra.Command {
 	return cmd
 }
 
-// NewCmdFilesUpdate will update file bases on the given arguments.
+// NewCmdFilesUpdate updates file based on the given arguments.
 // Args can be passed in following format:
 // name=<name>   tags=<tag1,tag2,...>   metadata.<key>=<value>
 // Returns an error if no arguments are passed.
@@ -155,5 +165,26 @@ func NewCmdFilesUpdate() *cobra.Command {
 	}
 	cmd.Flags().StringVarP(&fileId, filesUpdateFlagFile, filesUpdateFlagFileSh, "", filesUpdateShort)
 	cmd.MarkFlagRequired(filesStatFlagFile)
+	return cmd
+}
+
+// NewCmdFilesDownload downloads the file.
+func NewCmdFilesDownload() *cobra.Command {
+
+	var fileId, dest string
+
+	cmd := &cobra.Command{
+		Use:   filesDownloadCmd,
+		Short: filesDownloadShort,
+		Long:  filesDownloadLong,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// todo get the url; download the file
+			return nil
+		},
+	}
+	cmd.Flags().StringVarP(&fileId, filesDownloadFlagFile, filesDownloadFlagFileSh, "", filesDownloadFlagFileUsage)
+	cmd.Flags().StringVar(&dest, filesDownloadFlagDest, "", filesDownloadFlagDestUsage)
+	cmd.MarkFlagRequired(filesDownloadFlagFile)
+	cmd.MarkFlagRequired(filesDownloadFlagDest)
 	return cmd
 }
