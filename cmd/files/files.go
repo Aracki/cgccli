@@ -3,10 +3,11 @@ package files
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/aracki/cgccli/api/files"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"os"
 	"strings"
 )
 
@@ -178,12 +179,21 @@ func NewCmdFilesDownload() *cobra.Command {
 		Short: filesDownloadShort,
 		Long:  filesDownloadLong,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// todo get the url; download the file
-			fUrl, err := files.GetDownloadLink(fileId)
+			fileUrl, err := files.GetDownloadLink(fileId)
 			if err != nil {
 				return err
 			}
-			fmt.Println(fUrl.Url)
+
+			if _, err := os.Stat(dest); err != nil {
+				if os.IsNotExist(err) {
+					return files.DownloadFile(fileUrl.Url, dest)
+				} else {
+					// there could be other errors, like a permission one
+					return err
+				}
+			} else {
+				return errors.New(fmt.Sprintf("%s dest already exist", dest))
+			}
 			return nil
 		},
 	}

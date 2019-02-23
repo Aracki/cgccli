@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"github.com/aracki/cgccli/api"
 	"github.com/pkg/errors"
+	"io"
 	"net/url"
+	"os"
 	"strconv"
 )
 
@@ -168,4 +170,26 @@ func GetDownloadLink(fileId string) (fUrl FileUrl, err error) {
 	}
 
 	return fUrl, nil
+}
+
+func DownloadFile(fileUrl string, dest string) error {
+
+	resp, err := api.CGCRequest("GET", fileUrl, nil)
+	if err != nil {
+		return errors.Wrap(err, "GET file response failed")
+	}
+	defer resp.Body.Close()
+
+	f, err := os.Create(dest)
+	if err != nil {
+		return errors.Wrap(err, "create file failed")
+	}
+	defer f.Close()
+
+	_, err = io.Copy(f, resp.Body)
+	if err != nil {
+		// todo Delete invalid file in this case?
+		return errors.Wrap(err, "downloading file failed")
+	}
+	return nil
 }
