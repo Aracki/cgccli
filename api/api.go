@@ -19,7 +19,8 @@ const (
 )
 
 // CGCRequest will make a http request based on method, url & body.
-// It will return http response only if it's 200
+// It will return http response only if it's 200.
+// If it is not 200, error with body message will be returned
 func CGCRequest(method string, url string, body io.Reader) (resp *http.Response, err error) {
 
 	req, err := http.NewRequest(method, url, body)
@@ -48,6 +49,8 @@ func CGCRequest(method string, url string, body io.Reader) (resp *http.Response,
 	return resp, nil
 }
 
+// CGCRequestAndRead is wrapper around CGCRequest.
+// Read the response body until EOF.
 func CGCRequestAndRead(method string, url string, body io.Reader) (respBody []byte, err error) {
 
 	resp, err := CGCRequest(method, url, body)
@@ -63,6 +66,9 @@ func CGCRequestAndRead(method string, url string, body io.Reader) (respBody []by
 	return respBody, nil
 }
 
+// CGCRequestAndReadTotalOffset is wrapper around CGCRequest.
+// Read the response body until EOF.
+// Returns X-Total-Matching-Query header value.
 func CGCRequestAndReadTotalOffset(method string, url string, body io.Reader) (bytesResp []byte, totalOffset int, err error) {
 
 	resp, err := CGCRequest(method, url, body)
@@ -73,7 +79,7 @@ func CGCRequestAndReadTotalOffset(method string, url string, body io.Reader) (by
 
 	totalOffset, err = strconv.Atoi(resp.Header.Get("X-Total-Matching-Query"))
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, errors.Wrap(err, "X-Total-Matching-Query header missing")
 	}
 
 	respBody, err := ioutil.ReadAll(resp.Body)

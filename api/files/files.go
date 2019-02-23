@@ -83,7 +83,7 @@ func GetFiles(project string) (files []File, err error) {
 
 		q.Set("offset", offset)
 		url.RawQuery = q.Encode()
-		respBody, _, err := api.CGCRequestAndReadTotalOffset("GET", url.String(), nil)
+		respBody, err := api.CGCRequestAndRead("GET", url.String(), nil)
 		if err != nil {
 			return nil, errors.Wrap(err, "GET files with offset failed")
 		}
