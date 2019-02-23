@@ -103,6 +103,8 @@ func NewCmdFilesStat() *cobra.Command {
 // NewCmdFilesUpdate will update file bases on the given arguments.
 // Args can be passed in following format:
 // name=<name>   tags=<tag1,tag2,...>   metadata.<key>=<value>
+// Returns an error if no arguments are passed.
+// If update is successfully done, function will print file details.
 func NewCmdFilesUpdate() *cobra.Command {
 	var fileId string
 
@@ -110,7 +112,7 @@ func NewCmdFilesUpdate() *cobra.Command {
 		Use:   filesUpdateCmd,
 		Short: filesUpdateShort,
 		Long:  filesUpdateLong,
-		Args:  cobra.ArbitraryArgs,
+		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fdMap := files.FileDetailsMap{}
 			fdMetaDataMap := files.FileDetailsMetadataMap{}
