@@ -24,7 +24,7 @@ cgccli --token {token} files update --file {file_id} metadata.{key}={value}
 cgccli --token {token} files download --file {file_id} --dest {file_destination}
 ```
 
-![Alt Text](https://imgur.com/a/74ogsjg)
+![Alt Text](https://imgur.com/YODUYuv)
 
 ### CLI tool supports following operations
 

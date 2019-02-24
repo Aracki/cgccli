@@ -14,7 +14,7 @@ func init() {
 }
 
 var projectTest = "aracki_ivan/belgrade-test-project"
-var fileNameTest = "Homo_sapiens_asssembly38.fasta.fai"
+var fileNameTest = "Homo_sapiens_assembly38.fasta.fai"
 
 // TestProjectsList tests the API
 func TestFilesList(t *testing.T) {
