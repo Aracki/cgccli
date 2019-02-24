@@ -1,6 +1,10 @@
 # cgccli
 The Cancer Genomics Cloud - CLI tool
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/aracki/cgccli)](https://goreportcard.com/report/github.com/aracki/cgccli)
+[![GoDoc](https://godoc.org/github.com/Aracki/cgccli?status.svg)](https://godoc.org/github.com/Aracki/cgccli)
+![GitHub All Releases](https://img.shields.io/github/downloads/aracki/cgccli/total.svg)
+
 ### CLI tool supports following operations
 
 * List projects (​https://docs.cancergenomicscloud.org/docs/list-all-your-projects​)
