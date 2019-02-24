@@ -35,7 +35,7 @@ func TestProjectsList(t *testing.T) {
 			}
 		}
 		if !ok {
-			t.Error("there is no Belgrade Test Project")
+			t.Error("there is no ", projectTest)
 		}
 	}
 }
