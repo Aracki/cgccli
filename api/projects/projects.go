@@ -1,3 +1,4 @@
+// Package projects provides API calls related to projects.
 package projects
 
 import (

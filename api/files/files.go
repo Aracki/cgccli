@@ -1,3 +1,4 @@
+// Package files provides API calls related to files.
 package files
 
 import (

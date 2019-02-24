@@ -1,3 +1,4 @@
+// Package api provides different types of functions for making http request and reading responses.
 package api
 
 import (

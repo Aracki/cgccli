@@ -1,3 +1,4 @@
+// Package util provides utility tools for CLI.
 package util
 
 import (

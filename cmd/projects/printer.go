@@ -1,5 +1,3 @@
-// Package projects implements functions
-// that write api object fields with initialized tab writer.
 package projects
 
 import (

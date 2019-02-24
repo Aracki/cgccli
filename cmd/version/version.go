@@ -1,3 +1,4 @@
+// Package version provides version command.
 package version
 
 import (
