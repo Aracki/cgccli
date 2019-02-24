@@ -214,6 +214,8 @@ func DownloadFile(fileUrl string, dest string) error {
 		cleanup(dest)
 		return errors.Wrap(err, "downloading file failed")
 	}
+
+	counter.Bar.FinishPrint(fmt.Sprintf("file saved in %s", dest))
 	return nil
 }
 
