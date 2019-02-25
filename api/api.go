@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	HeaderToken                = "X-SBG-Auth-Token"
-	HeaderMaxOffset            = "X-Total-Matching-Query"
-	HeaderJSONContentTypeKey   = "Content-Type"
-	HeaderJSONContentTypeValue = "application/json"
+	headerToken                = "X-SBG-Auth-Token"
+	headerMaxOffset            = "X-Total-Matching-Query"
+	headerJSONContentTypeKey   = "Content-Type"
+	headerJSONContentTypeValue = "application/json"
 
 	UrlBase     = "https://cgc-api.sbgenomics.com/v2"
 	UrlProjects = UrlBase + "/projects"
@@ -33,8 +33,8 @@ func CGCRequest(method string, url string, body io.Reader) (resp *http.Response,
 	}
 
 	// add mandatory headers
-	req.Header.Set(HeaderToken, viper.GetString("token"))
-	req.Header.Set(HeaderJSONContentTypeKey, HeaderJSONContentTypeValue)
+	req.Header.Set(headerToken, viper.GetString("token"))
+	req.Header.Set(headerJSONContentTypeKey, headerJSONContentTypeValue)
 
 	client := &http.Client{}
 	resp, err = client.Do(req)
@@ -82,9 +82,9 @@ func CGCRequestAndReadTotalOffset(method string, url string, body io.Reader) (by
 	}
 	defer resp.Body.Close()
 
-	totalOffset, err = strconv.Atoi(resp.Header.Get(HeaderMaxOffset))
+	totalOffset, err = strconv.Atoi(resp.Header.Get(headerMaxOffset))
 	if err != nil {
-		return nil, 0, errors.Wrap(err, fmt.Sprintf("%s header missing", HeaderMaxOffset))
+		return nil, 0, errors.Wrap(err, fmt.Sprintf("%s header missing", headerMaxOffset))
 	}
 
 	respBody, err := ioutil.ReadAll(resp.Body)

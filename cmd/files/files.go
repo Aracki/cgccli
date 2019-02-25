@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aracki/cgccli/api/files"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"os"
 	"strings"
@@ -132,21 +131,22 @@ func NewCmdFilesUpdate() *cobra.Command {
 
 			for _, arg := range args {
 				if !strings.Contains(arg, "=") {
-					return errors.New(fmt.Sprintf(
+					return fmt.Errorf(fmt.Sprintf(
 						"\"%s\" arg error; args need to be passed in key=value format", arg))
+				}
+
+				argKey := strings.Split(arg, "=")[0]
+				argValue := strings.Split(arg, "=")[1]
+
+				if argKey == "tags" {
+					tagsArr := strings.Split(argValue, ",")
+					fdMap[argKey] = []string(tagsArr)
+				} else if strings.Contains(argKey, "metadata.") {
+					metadataKey := strings.Split(argKey, ".")[1]
+					fdMetaDataMap[metadataKey] = argValue
+					fdMap["metadata"] = fdMetaDataMap
 				} else {
-					argKey := strings.Split(arg, "=")[0]
-					argValue := strings.Split(arg, "=")[1]
-					if argKey == "tags" {
-						tagsArr := strings.Split(argValue, ",")
-						fdMap[argKey] = []string(tagsArr)
-					} else if strings.Contains(argKey, "metadata.") {
-						metadataKey := strings.Split(argKey, ".")[1]
-						fdMetaDataMap[metadataKey] = argValue
-						fdMap["metadata"] = fdMetaDataMap
-					} else {
-						fdMap[argKey] = argValue
-					}
+					fdMap[argKey] = argValue
 				}
 			}
 
@@ -169,7 +169,7 @@ func NewCmdFilesUpdate() *cobra.Command {
 	return cmd
 }
 
-// NewCmdFilesDownload downloads the file.
+// NewCmdFilesDownload downloads the file to the given destination only if it doesn't exist.
 func NewCmdFilesDownload() *cobra.Command {
 
 	var fileId, dest string
@@ -187,12 +187,12 @@ func NewCmdFilesDownload() *cobra.Command {
 			if _, err := os.Stat(dest); err != nil {
 				if os.IsNotExist(err) {
 					return files.DownloadFile(fileUrl.Url, dest)
-				} else {
-					// there could be other errors, like a permission one
-					return err
 				}
+
+				// there could be other errors, like a permission one
+				return err
 			} else {
-				return errors.New(fmt.Sprintf("%s dest already exist", dest))
+				return fmt.Errorf("%s dest already exist", dest)
 			}
 		},
 	}

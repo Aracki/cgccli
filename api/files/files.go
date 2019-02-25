@@ -16,11 +16,13 @@ import (
 	"strconv"
 )
 
+// JsonResponse contains self link and array of Files.
 type JsonResponse struct {
 	Href  string `json:"href"`
 	Items []File `json:"items"`
 }
 
+// Files contains all the JSON fields from one File.
 type File struct {
 	Href    string `json:"href"`
 	Id      string `json:"id"`
@@ -30,6 +32,7 @@ type File struct {
 	Type    string `json:"type"`
 }
 
+// FileDetails contains all the JSON fields from details about a specific File.
 type FileDetails struct {
 	Href       string `json:"href"`
 	Id         string `json:"id"`
@@ -50,11 +53,15 @@ type FileDetails struct {
 	Metadata map[string]string `json:"metadata"`
 }
 
+// FileUrl contains download link json field
 type FileUrl struct {
 	Url string `json:"url"`
 }
 
+// FileDetailsMap is just an alias for map used for marshaling the FileDetails JSON.
 type FileDetailsMap map[string]interface{}
+
+// FileDetailsMetadataMap is just an alias for map used as FileDetailsMap metadata JSON field.
 type FileDetailsMetadataMap map[string]string
 
 // GetFiles will get first 1-100 (limit) files for the given project.
@@ -178,7 +185,7 @@ func GetDownloadLink(fileId string) (fUrl FileUrl, err error) {
 }
 
 // DownloadFile writes file response to destination file.
-// If interrupted, removes the invalid file.
+// If stopped with ^c (SIGINT), removes the invalid file.
 func DownloadFile(fileUrl string, dest string) error {
 
 	resp, err := api.CGCRequest("GET", fileUrl, nil)

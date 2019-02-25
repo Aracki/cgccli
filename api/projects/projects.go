@@ -7,11 +7,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+// JsonResponse contains self link and array of Projects.
 type JsonResponse struct {
 	Href  string    `json:"href"`
 	Items []Project `json:"items"`
 }
 
+// Project contains all the JSON fields from one Project.
 type Project struct {
 	Href string `json:"href"`
 	Id   string `json:"id"`

@@ -34,6 +34,7 @@ const (
 // Change where to spit all outputs of CLI
 var whereToPrint io.Writer = os.Stdout
 
+// NewTabWriter creates a new Writer with a given tab writer properties.
 func NewTabWriter() *tabwriter.Writer {
 	return tabwriter.NewWriter(whereToPrint, tabwriterMinWidth, tabwriterTabWidth, tabwriterPadding, tabwriterPadChar, tabwriterFlags)
 }
