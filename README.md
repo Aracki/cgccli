@@ -1,5 +1,5 @@
 # cgccli
-The CLI tool written in Go for accessing Cancer Genomics Cloud Public API 
+The CLI tool written in Go for accessing Cancer Genomics Cloud Public API. Inspired by [SB](https://docs.cancergenomicscloud.org/v1.0/docs/command-line-interface) tool.
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/aracki/cgccli)](https://goreportcard.com/report/github.com/aracki/cgccli)
 [![GoDoc](https://godoc.org/github.com/Aracki/cgccli?status.svg)](https://godoc.org/github.com/Aracki/cgccli)
