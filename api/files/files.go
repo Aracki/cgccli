@@ -22,7 +22,7 @@ type JsonResponse struct {
 	Items []File `json:"items"`
 }
 
-// Files contains all the JSON fields from one File.
+// File contains all the JSON fields from one File.
 type File struct {
 	Href    string `json:"href"`
 	Id      string `json:"id"`

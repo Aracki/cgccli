@@ -191,9 +191,9 @@ func NewCmdFilesDownload() *cobra.Command {
 
 				// there could be other errors, like a permission one
 				return err
-			} else {
-				return fmt.Errorf("%s dest already exist", dest)
 			}
+
+			return fmt.Errorf("%s dest already exist", dest)
 		},
 	}
 	cmd.Flags().StringVarP(&fileId, filesDownloadFlagFile, filesDownloadFlagFileSh, "", filesDownloadFlagFileUsage)

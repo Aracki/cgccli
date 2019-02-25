@@ -7,7 +7,7 @@ The CLI tool written in Go for accessing Cancer Genomics Cloud Public API
 ![GitHub All Releases](https://img.shields.io/github/downloads/aracki/cgccli/total.svg)
 
 ### Installation
-If you don't have Go installed you can download the appropriate binary for your system from the [releases page](https://github.com/Aracki/cgccli/releases) and put it in your path.
+If you don't have Go installed you can download binary from the [releases page](https://github.com/Aracki/cgccli/releases).
 
 If you do have Go:
 
@@ -20,13 +20,12 @@ go get -u github.com/aracki/cgccli
 cgccli --token {token} projects list
 cgccli --token {token} files list --project {project_id}
 cgccli --token {token} files stat --file {file_id} 
-cgccli --token {token} files update --file {file_id} name={name}
-cgccli --token {token} files update --file {file_id} metadata.{key}={value}
+cgccli --token {token} files update --file {file_id} name={name} metadata.{key}={value} 
 cgccli --token {token} files download --file {file_id} --dest {file_destination}
 ```
 
 ### Examples
 
-* Getting file details:
+* Download file:
 
-![Alt Test](https://i.imgur.com/UUNtPl1.gif)
+![Alt Test](https://i.imgur.com/NJK1Qr8.gif)
