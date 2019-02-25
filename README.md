@@ -3,7 +3,7 @@ The CLI tool written in Go for accessing Cancer Genomics Cloud Public API
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/aracki/cgccli)](https://goreportcard.com/report/github.com/aracki/cgccli)
 [![GoDoc](https://godoc.org/github.com/Aracki/cgccli?status.svg)](https://godoc.org/github.com/Aracki/cgccli)
-<a href="https://docs.cancergenomicscloud.org/docs/the-cgc-api)"><img src="https://img.shields.io/badge/CGC-API%20Reference-blue.svg"></a>
+<a href="https://docs.cancergenomicscloud.org/docs/the-cgc-api"><img src="https://img.shields.io/badge/CGC-API%20Reference-blue.svg"></a>
 ![GitHub All Releases](https://img.shields.io/github/downloads/aracki/cgccli/total.svg)
 
 ### Installation
